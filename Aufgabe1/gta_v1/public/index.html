@@ -52,8 +52,10 @@
 				<form id="filter-form" action="/discovery" method="post">
 					<fieldset>
 						<legend>Filter by Searchterm</legend>
-						<label for="searchterm-input">searchterm</label>
+						<label for="searchterm-input"></label>
 						<input id="searchterm-input" placeholder="search term" type="text" required/>
+						<input id="latitude-user" type="hidden"/>
+						<input id="longitude-user" type="hidden"/>
 						<input id="apply-input" type="submit" value="apply"/>
 					</fieldset>
 				</form>
