@@ -96,7 +96,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
     var getLocationMapSrc = function(lat, lon, tags, zoom) {
         zoom = typeof zoom !== 'undefined' ? zoom : 10;
 
-        if (apiKey === "QTafwzVqTK3BhWeuo35UUqFX7TmyAMiv") {
+        if (apiKey === "API_KEY") {
             console.log("No API key provided.");
             return "images/mapview.jpg";
         }
@@ -124,10 +124,15 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
                 alert(error);
             }
             var onsuccess = function(position){
-                document.getElementById("latitude-input").value = getLatitude(position);
-                document.getElementById("latitude-user").value = getLatitude(position);
-                document.getElementById("longitude-input").value = getLongitude(position);
-                document.getElementById("longitude-user").value = getLongitude(position);
+                var latitude = getLatitude(position);
+                var longitude = getLongitude(position);
+
+                document.getElementById("latitude-input").value = latitude;
+                document.getElementById("latitude-user").value = latitude;
+                document.getElementById("longitude-input").value = longitude;
+                document.getElementById("longitude-user").value = longitude;
+
+                document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude);
             }
             tryLocate(onsuccess, onerror);
         }
