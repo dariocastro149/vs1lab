@@ -82,7 +82,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
     };
 
     // Hier Google Maps API Key eintragen
-    var apiKey = "YOUR_API_KEY_HERE";
+    var apiKey = "QTafwzVqTK3BhWeuo35UUqFX7TmyAMiv";
 
     /**
      * Funktion erzeugt eine URL, die auf die Karte verweist.
@@ -96,7 +96,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
     var getLocationMapSrc = function(lat, lon, tags, zoom) {
         zoom = typeof zoom !== 'undefined' ? zoom : 10;
 
-        if (apiKey === "YOUR_API_KEY_HERE") {
+        if (apiKey === "API_KEY") {
             console.log("No API key provided.");
             return "images/mapview.jpg";
         }
@@ -120,7 +120,21 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
         readme: "Dieses Objekt enthält 'öffentliche' Teile des Moduls.",
 
         updateLocation: function() {
-            // TODO Hier Inhalt der Funktion "update" ergänzen
+            var onerror = function(error){
+                alert(error);
+            }
+            var onsuccess = function(position){
+                var latitude = getLatitude(position);
+                var longitude = getLongitude(position);
+
+                document.getElementById("latitude-input").value = latitude;
+                document.getElementById("latitude-user").value = latitude;
+                document.getElementById("longitude-input").value = longitude;
+                document.getElementById("longitude-user").value = longitude;
+
+                document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude);
+            }
+            tryLocate(onsuccess, onerror);
         }
 
     }; // ... Ende öffentlicher Teil
@@ -132,6 +146,6 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
  * des Skripts.
  */
 $(function() {
-    alert("Please change the script 'geotagging.js'");
-    // TODO Hier den Aufruf für updateLocation einfügen
+    //alert("Please change the script 'geotagging.js'");
+    gtaLocator.updateLocation();
 });
