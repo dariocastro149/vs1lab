@@ -1,0 +1,91 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+header, footer {
+    background-color: gray;
+    padding: 15px;
+}
+
+#tag-form * {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 5px;
+}
+
+#results {
+    padding: 2px;
+    margin: 0;
+    list-style-type: none;
+    /*display: inline-block;*/
+    color: white;
+}
+
+#results li {
+    background-color: dodgerblue;
+    padding: 7px;
+    margin-bottom: 5px;
+}
+
+.row{
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    /*flex-wrap: wrap;*/
+}
+
+.row::after {
+    content: "";
+    clear: both;
+}
+
+[class*="col-"] {
+    float: left;
+    padding: 15px 25px 15px 0;
+}
+
+[class*="col-"]:last-child{
+    padding-right:0;
+}
+
+
+.col-2 {flex-grow: 2}
+.col-3 {flex-grow: 3}
+.col-4 {flex-grow: 4}
+.col-1 {flex-grow: 1}
+.col-5 {flex-grow: 5}
+.col-6 {flex-grow: 6}
+.col-7 {flex-grow: 7}
+.col-8 {flex-grow: 8}
+.col-9 {flex-grow: 9}
+.col-10 {flex-grow: 10}
+.col-11 {flex-grow: 11}
+.col-12 {flex-grow: 12}
+
+.no-shrink{
+    flex-shrink:0;
+}
+
+#result-img {
+    max-width: 100%;
+}
+
+@media (max-width: 900px) {
+    .row{
+        flex-wrap: wrap;
+    }
+    [class*="col-"]{
+        padding-right:0;
+    }
+    .no-shrink{
+        flex-shrink:1;
+    }
+}
