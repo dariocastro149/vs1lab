@@ -160,15 +160,15 @@ app.post('/discovery', function(req, res) {
     if (req.body.name !== undefined){
         res.render('gta', {
             taglist: Modul.searchName(req.body.name),
-            latinput: 40,
-            longinput: 8
+            latinput: 40.0,
+            longinput: 8.0
         });
     }
     else {
         res.render('gta', {
             taglist: [],
-            latinput: 40,
-            longinput: 8
+            latinput: 40.0,
+            longinput: 8.0
         });
     };
 
