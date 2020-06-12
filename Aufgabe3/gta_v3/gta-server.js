@@ -122,15 +122,23 @@ app.get('/', function(req, res) {
 var radius = 10;
 app.post('/tagging', function(req, res) {
 
-    var lat = req.body.latitude;
-    var lon = req.body.longitude;
-    console.log('Latitude:  ' + lat)
-    Modul.addGeoTag(new GeoTag(lat, lon, req.name, req.hashtag));
-    console.log(Modul.geotags);
+    var latitude = req.body.latitude;
+    var longitude = req.body.longitude;
+    var name = req.body.name;
+    var hashtag = req.body.hashtag;
+
+    Modul.addGeoTag(new GeoTag(
+            latitude,
+            longitude,
+            name,
+            hashtag));
+
     res.render('gta', {
-        taglist: Modul.searchRadius(lat, lon, radius), //wieso searchRadius?
-        latinput: lat,
-        longinput: lon
+        taglist: Modul.searchRadius(latitude, longitude, radius),
+        latinput: latitude,
+        longinput: longitude,
+        name: name,
+        hashtag: hashtag
     });
 
 });
@@ -149,9 +157,7 @@ app.post('/tagging', function(req, res) {
 
 app.post('/discovery', function(req, res) {
 
-    //var lat = req.latitude;
-    //var lon = req.longitude;
-    if (req.name !== undefined){
+    if (req.body.name !== undefined){
         res.render('gta', {
             taglist: Modul.searchName(req.body.name),
             latinput: 40,
