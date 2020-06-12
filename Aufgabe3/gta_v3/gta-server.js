@@ -53,7 +53,9 @@ function GeoTag(latitude, longitude, name, hashtag){
  */
 
 var Modul = {
+
     geotags: [],
+
     searchRadius: function(latitude, longitude, radius){
         var taglist = [];
         this.geotags.forEach(function (item) {
@@ -64,32 +66,35 @@ var Modul = {
         })
         return taglist;
     },
-    searchName: function(name){
+
+    searchName: function(name) {
         var taglist = [];
         this.geotags.forEach(function (item) {
-            if (item.name === name){
-                taglist.push(item);
-            }
-            else if (item.hashtag === '#' + name){
+            if (item.name.includes(name) || item.hashtag.includes(name)) {
                 taglist.push(item);
             }
         })
         return taglist;
     },
-    addGeoTag: function (geotag){
+
+    addGeoTag: function (geotag) {
         this.geotags.push(geotag);
     },
+
     removeGeoTag: function (geotag) {
         this.geotags.forEach(function (item) {
-          if (item.name === geotag.name){
+          if (item.name === geotag.name) {
               this.geotags.pop(item);
           }
         })
     }
+
 };
+
 Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
 Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
 console.log(Modul.geotags);
+
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
  * (http://expressjs.com/de/4x/api.html#app.get.method)
@@ -157,18 +162,18 @@ app.post('/tagging', function(req, res) {
 
 app.post('/discovery', function(req, res) {
 
-    if (req.body.name !== undefined){
+    if (req.body.name !== undefined) {
         res.render('gta', {
             taglist: Modul.searchName(req.body.name),
-            latinput: 40,
-            longinput: 8
+            latinput: 40.1,
+            longinput: 8.2
         });
     }
     else {
         res.render('gta', {
             taglist: [],
-            latinput: 40,
-            longinput: 8
+            latinput: 40.1,
+            longinput: 8.2
         });
     };
 
