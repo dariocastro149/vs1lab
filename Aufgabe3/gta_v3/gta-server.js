@@ -57,8 +57,8 @@ var Modul = {
     searchRadius: function(latitude, longitude, radius){
         var taglist = [];
         this.geotags.forEach(function (item) {
-            var distance = Math.sqrt(Math.pow(item.latitude - latitude, 2) + Math.pow(item.latitude - latitude, 2));
-            if (distance <= radius){
+            var distance = Math.pow(item.latitude - latitude, 2) + Math.pow(item.latitude - latitude, 2);
+            if (distance <= Math.pow(radius, 2)){
                 taglist.push(item);
             }
         })
