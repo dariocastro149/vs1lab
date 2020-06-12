@@ -70,10 +70,7 @@ var Modul = {
     searchName: function(name) {
         var taglist = [];
         this.geotags.forEach(function (item) {
-            if (item.name === name) {
-                taglist.push(item);
-            }
-            else if (item.hashtag === '#' + name) {
+            if (item.name.includes(name) || item.hashtag.includes(name)) {
                 taglist.push(item);
             }
         })
