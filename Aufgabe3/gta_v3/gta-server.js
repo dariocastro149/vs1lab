@@ -57,36 +57,18 @@ var Modul = {
     geotags: [],
 
     searchRadius: function(latitude, longitude, radius){
-        var taglist = [];
-        this.geotags.forEach(function (item) {
-            var distance = Math.pow(item.latitude - latitude, 2) + Math.pow(item.latitude - latitude, 2);
-            if (distance <= Math.pow(radius, 2)){
-                taglist.push(item);
-            }
-        })
-        return taglist;
+        return this.geotags.filter((item) => Math.pow(item.latitude - latitude, 2) + Math.pow(item.latitude - latitude, 2) <= Math.pow(radius, 2));
     },
 
     searchName: function(name) {
-        var taglist = [];
-        this.geotags.forEach(function (item) {
-            if (item.name.includes(name) || item.hashtag.includes(name)) {
-                taglist.push(item);
-            }
-        })
-        return taglist;
+        return this.geotags.filter((item)=>item.name.includes(name) || item.hashtag.includes(name));
     },
 
     addGeoTag: function (geotag) {
         this.geotags.push(geotag);
     },
-
     removeGeoTag: function (geotag) {
-        this.geotags.forEach(function (item) {
-          if (item.name === geotag.name) {
-              this.geotags.pop(item);
-          }
-        })
+        this.geotags=this.geotags.filter(item.name !== geotag.name);
     }
 
 };
@@ -107,8 +89,8 @@ console.log(Modul.geotags);
 app.get('/', function(req, res) {
     res.render('gta', {
         taglist: Modul.geotags,
-        latinput: undefined,
-        longinput: undefined
+        latinput: null,
+        longinput: null
     });
 });
 
@@ -175,11 +157,7 @@ app.post('/discovery', function(req, res) {
             latinput: 40.1,
             longinput: 8.2
         });
-    };
-
-
-
-
+    }
 });
 
 /**

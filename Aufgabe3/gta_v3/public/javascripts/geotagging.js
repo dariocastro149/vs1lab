@@ -122,7 +122,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
         updateLocation: function() {
             var onerror = function(error){
                 alert(error);
-            }
+            };
             var onsuccess = function(position){
                 var latitude = getLatitude(position);
                 var longitude = getLongitude(position);
@@ -136,7 +136,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
                 var list = JSON.parse(document.getElementById("result-img").dataset.tags);
                 console.log(list);
                 document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude, list);
-            }
+            };
             tryLocate(onsuccess, onerror);
         }
 
@@ -152,13 +152,8 @@ $(function() {
     //alert("Please change the script 'geotagging.js'");
     var latinput = document.getElementById("latitude-input").value;
     var longinput = document.getElementById("longitude-input").value;
-    var longuser = document.getElementById("latitude-user").value;
-    var latuser = document.getElementById("longitude-user").value;
 
-    if ((latinput === "") &&
-        ( latuser === "") &&
-        ( longinput === "") &&
-        ( longuser === "") ) {
+    if (!latinput && !longinput){
 
             gtaLocator.updateLocation();
             console.log("location updated");
