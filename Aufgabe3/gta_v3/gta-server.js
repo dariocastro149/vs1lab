@@ -73,9 +73,9 @@ var Modul = {
 
 };
 
-Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
-Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
-console.log(Modul.geotags);
+// Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
+// Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
+/console.log(Modul.geotags);
 
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
@@ -147,15 +147,15 @@ app.post('/discovery', function(req, res) {
     if (req.body.name !== undefined) {
         res.render('gta', {
             taglist: Modul.searchName(req.body.name),
-            latinput: 40.1,
-            longinput: 8.2
+            latinput: req.body.latitude,
+            longinput: req.body.longitude
         });
     }
     else {
         res.render('gta', {
-            taglist: [],
-            latinput: 40.1,
-            longinput: 8.2
+            taglist: Modul.geotags,
+            latinput: req.body.latitude,
+            longinput: req.body.longitude
         });
     }
 });
