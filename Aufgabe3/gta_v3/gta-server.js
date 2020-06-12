@@ -75,7 +75,7 @@ var Modul = {
 
 // Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
 // Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
-/console.log(Modul.geotags);
+//console.log(Modul.geotags);
 
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
