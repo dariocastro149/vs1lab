@@ -132,7 +132,10 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
                 document.getElementById("longitude-input").value = longitude;
                 document.getElementById("longitude-user").value = longitude;
 
-                document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude);
+                //add geotags list?
+                var list = JSON.parse(document.getElementById("result-img").dataset.tags);
+                console.log(list);
+                document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude, list);
             }
             tryLocate(onsuccess, onerror);
         }
@@ -147,5 +150,19 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
  */
 $(function() {
     //alert("Please change the script 'geotagging.js'");
-    gtaLocator.updateLocation();
+    var latinput = document.getElementById("latitude-input").value;
+    var longinput = document.getElementById("longitude-input").value;
+    var longuser = document.getElementById("latitude-user").value;
+    var latuser = document.getElementById("longitude-user").value;
+
+    if ((latinput === "") &&
+        ( latuser === "") &&
+        ( longinput === "") &&
+        ( longuser === "") ) {
+
+            gtaLocator.updateLocation();
+            console.log("location updated");
+    }
+
+
 });

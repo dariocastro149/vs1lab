@@ -87,7 +87,9 @@ var Modul = {
         })
     }
 };
-
+Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
+Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
+console.log(Modul.geotags);
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
  * (http://expressjs.com/de/4x/api.html#app.get.method)
@@ -99,7 +101,9 @@ var Modul = {
 
 app.get('/', function(req, res) {
     res.render('gta', {
-        taglist: []
+        taglist: Modul.geotags,
+        latinput: undefined,
+        longinput: undefined
     });
 });
 
@@ -120,9 +124,13 @@ app.post('/tagging', function(req, res) {
 
     var lat = req.body.latitude;
     var lon = req.body.longitude;
+    console.log('Latitude:  ' + lat)
     Modul.addGeoTag(new GeoTag(lat, lon, req.name, req.hashtag));
+    console.log(Modul.geotags);
     res.render('gta', {
-        taglist: Modul.searchRadius(lat, lon, radius)
+        taglist: Modul.searchRadius(lat, lon, radius), //wieso searchRadius?
+        latinput: lat,
+        longinput: lon
     });
 
 });
@@ -143,11 +151,22 @@ app.post('/discovery', function(req, res) {
 
     //var lat = req.latitude;
     //var lon = req.longitude;
-    if (req.body.name !== undefined){
+    if (req.name !== undefined){
         res.render('gta', {
-            taglist: Modul.searchName(req.body.name)
+            taglist: Modul.searchName(req.body.name),
+            latinput: 40,
+            longinput: 8
         });
     }
+    else {
+        res.render('gta', {
+            taglist: [],
+            latinput: 40,
+            longinput: 8
+        });
+    };
+
+
 
 
 });

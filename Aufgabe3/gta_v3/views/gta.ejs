@@ -30,15 +30,37 @@
 		<form id="tag-form" action="/tagging" method="post">
 			<fieldset>
 				<legend>Enter new GeoTag</legend>
+
 				<label for="latitude-input">latitude</label>
-				<input id="latitude-input" placeholder="49.01379" pattern="[0-9]+\.[0-9]+" required/>
+				<!--latitude-->
+				<%if(latinput !== undefined) {%>
+					<input id="latitude-input" value="<%= latinput %>"  placeholder="49.01379" pattern="[0-9]+\.[0-9]+" required/>
+				<% };%>
+				<% if(latinput === undefined) {%>
+					<input id="latitude-input" placeholder="49.01379" pattern="[0-9]+\.[0-9]+" required/>
+				<% };%>
+
+
 				<label for="longitude-input">longitude</label>
-				<input id="longitude-input" placeholder="8.390071" pattern="[0-9]+\.[0-9]+" required/>
+				<!--longitude-->
+				<%if(latinput !== undefined) {%>
+				<input id="longitude-input" value="<%= longinput %>"  placeholder="8.390071" pattern="[0-9]+\.[0-9]+" required/>
+				<% };%>
+				<%if(latinput === undefined) {%>
+					<input id="longitude-input" placeholder="8.390071" pattern="[0-9]+\.[0-9]+" required/>
+				<% };%>
+
+
 				<label for="name-input">name</label>
 				<input id="name-input" placeholder="some name" pattern="[A-Za-z]{1,10}" required/>
 				<label for="hashtag-input">hashtag</label>
 				<input id="hashtag-input" placeholder="# + max. 10 letters" pattern="#[A-Za-z]{0,10}"/>
 				<input id="submit-input" type="submit" value="submit"/>
+
+
+
+
+
 			</fieldset>
 		</form>
 
@@ -55,9 +77,24 @@
 				<legend>Filter by Searchterm</legend>
 				<label for="searchterm-input"></label>
 				<input id="searchterm-input" placeholder="search term" type="text" required/>
-				<input id="latitude-user" type="hidden"/>
-				<input id="longitude-user" type="hidden"/>
+
+				<!-- latitude -->
+				<%if(latinput !== undefined) {%>
+					<input id="latitude-user" value ="<%latinput %>"type="hidden"/>
+				<% };%>
+				<%if(latinput === undefined) {%>
+					<input id="latitude-user" type="hidden"/>
+				<% };%>
+
+				<!-- lngitude -->
+				<%if(longinput !== undefined) {%>
+				<input id="longitude-user" value ="<%longinput %>" type="hidden"/>
+				<% };%>
+				<%if(longinput === undefined) {%>
+					<input id="longitude-user" type="hidden"/>
+				<% };%>
 				<input id="apply-input" type="submit" value="apply"/>
+
 			</fieldset>
 		</form>
 		<!-- ############### Aufgabe1a Form2 Ende -->
@@ -72,7 +109,10 @@
 			</div>
 
 			<div class="tagmap col-4">
-				<img id="result-img" src="./images/mapview.jpg" alt="a map with locations"/>
+				<!--add geotags list to 'data-tags'-->
+				<% if(taglist !== undefined) {%>
+				 <img id="result-img" data-tags="<%= JSON.stringify(taglist)%>" src="./images/mapview.jpg" alt="a map with locations"/>
+				<%};%>
 				<div class="caption">Result map</div>
 			</div>
 		</div>
