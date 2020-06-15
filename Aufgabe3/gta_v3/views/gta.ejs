@@ -1,6 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
 
-	<!-- TODO: HTML AUS AUFGABE2 HIERHER KOPIEREN UND DIE BEISPIEL-EINTRÄGE DER DISCOVERY-LISTE MIT DEN FOLGENDEN ZEILEN ERSETZEN -->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GeoTagApp</title>
+        <link rel='stylesheet' href='./stylesheets/style.css'/>
+    </head>
 
-	<% if (taglist !== undefined) taglist.forEach(function(gtag) { %>
-		<li><%= gtag.name %> ( <%= gtag.latitude %>,<%= gtag.longitude %>) <%= gtag.hashtag %> </li>
-	<% }); %>
+    <body>
+
+        <header>
+            <img src="./images/location.png" width="100"
+                 alt="an image of a map and location">
+            <h1>GeoTagApp</h1>
+            <nav>
+                <a href="#">About</a> | <a href="#">Help</a> | <a
+                        href="/">Home</a>
+            </nav>
+        </header>
+
+        <main class="row">
+
+            <section class="tagging col-4">
+                <h2>Tagging</h2>
+
+                <!-- ############### Aufgabe1a Form1 Start -->
+                <form id="tag-form" action="/tagging" method="post">
+                    <fieldset>
+                        <legend>Enter new GeoTag</legend>
+                        <label for="latitude-input">latitude</label>
+                        <input name="latitude" id="latitude-input" value="<%= latinput %>" placeholder="49.01379"
+                               pattern="[0-9]+\.[0-9]+" required/>
+                        <label for="longitude-input">longitude</label>
+                        <input name="longitude" id="longitude-input" value="<%= longinput %>" placeholder="8.390071"
+                               pattern="[0-9]+\.[0-9]+" required/>
+                        <label for="name-input">name</label>
+                        <input name="name" id="name-input" placeholder="some name" pattern="[A-Za-z]{1,10}" required/>
+                        <label for="hashtag-input">hashtag</label>
+                        <input name="hashtag" id="hashtag-input" placeholder="# + max. 10 letters"
+                               pattern="#[A-Za-z]{0,10}"/>
+                        <input id="submit-input" type="submit" value="submit"/>
+
+                    </fieldset>
+                </form>
+
+                <!-- ############### Aufgabe1a Form1 Ende -->
+
+            </section>
+
+            <section class="discovery col-8">
+                <h2>Discovery</h2>
+
+                <!-- ############### Aufgabe1a Form2 Start -->
+                <form id="filter-form" action="/discovery" method="post">
+                    <fieldset>
+                        <legend>Filter by Searchterm</legend>
+                        <label for="searchterm-input"></label>
+                        <input name="name" id="searchterm-input" placeholder="search term" type="text" required/>
+                        <input name="latitude" id="latitude-user" value="<% latinput %>" type="hidden"/>
+                        <input id="latitude-user" type="hidden"/>
+                        <input name="longitude" id="longitude-user" value="<% longinput %>" type="hidden"/>
+                        <input id="longitude-user" type="hidden"/>
+                        <input id="apply-input" type="submit" value="apply"/>
+                    </fieldset>
+                </form>
+                <!-- ############### Aufgabe1a Form2 Ende -->
+
+                <div class="row">
+                    <div class="taglist col-8 no-shrink">
+                        <ul id="results">
+                            <% if (taglist !== undefined) taglist.forEach(function(gtag) { %>
+                            <li><%= gtag.name %> ( <%= gtag.latitude %>,<%= gtag.longitude %>) <%= gtag.hashtag %> </li>
+                            <% }); %>
+                        </ul>
+                    </div>
+
+                    <div class="tagmap col-4">
+                        <!--add geotags list to 'data-tags'-->
+                        <img id="result-img" data-tags="<%= JSON.stringify(taglist) %>" src="./images/mapview.jpg"
+                             alt="a map with locations"/>
+                        <div class="caption">Result map</div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer>
+            <span>2017 by LKIT</span>
+        </footer>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="./javascripts/geotagging.js"></script>
+    </body>
+</html>
