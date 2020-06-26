@@ -15,7 +15,7 @@ Content-Type: application/json
 ###
 
 # curl -X GET http://localhost:3000/geotags?radius=20
-GET http://localhost:3000/geotags?radius=20
+GET http://localhost:3000/geotags?radius=20&latitude=40&longtitude=1
 
 ###
 # curl -X GET http://localhost:3000/geotags?name=20

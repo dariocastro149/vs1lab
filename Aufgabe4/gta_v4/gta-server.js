@@ -133,8 +133,8 @@ app.get('/geotags', function (req, res) {
     if (req.query.name) {
         returnTags = Modul.searchNameFuzzy(req.query.name, returnTags)
     }
-    if (req.query.radius) {
-        returnTags = Modul.searchRadius(req.query.radius, returnTags)
+    if (req.query.radius && req.query.latitude && req.query.longtitude) {
+        returnTags = Modul.searchRadius(req.query.latitude, req.query.longtitude, req.query.radius, returnTags)
     }
     return res.status(200).send(returnTags);
 });
