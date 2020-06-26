@@ -125,6 +125,26 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
             document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude, list);
         },
 
+        updateMapAndList(latitude, longitude, list) {
+            var ul = document.getElementById("results");
+            while (ul.firstChild) {
+                ul.removeChild(ul.lastChild);
+            }
+            document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude, list);
+            document.getElementById("latitude-input").value = latitude;
+            document.getElementById("latitude-user").value = latitude;
+            document.getElementById("longitude-input").value = longitude;
+            document.getElementById("longitude-user").value = longitude;
+
+            list.forEach(gtag => {
+                let li = document.createElement("li");
+                li.appendChild(document.createTextNode(gtag.name + " (" + gtag.latitude + ", " + gtag.longitude + ") " + gtag.hashtag));
+                ul.appendChild(li);
+            });
+
+
+        },
+
         updateLocation: function () {
             var onerror = function (error) {
                 alert(error);
@@ -169,7 +189,7 @@ function refreshTags(params){
     xhttp.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE) {
             if(this.status === 200) {
-                //TODO: Fill fields!!!
+                gtaLocator.updateMapAndList();
             } else{
                 alert("Something went wrong with the network request.")
             }

@@ -189,7 +189,10 @@ function refreshTags(params){
     xhttp.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE) {
             if(this.status === 200) {
-                gtaLocator.updateMapAndList();
+                let res = JSON.parse(this.responseText);
+                let latitude = document.getElementById("latitude-input").value;
+                let longitude = document.getElementById("longitude-input").value;
+                gtaLocator.updateMapAndList(latitude,longitude,res);
             } else{
                 alert("Something went wrong with the network request.")
             }
@@ -218,12 +221,12 @@ function taggingClick(event){
     };
     xhttp.open("POST", "/geotags", true);
     xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send(geoTag);
+    xhttp.send(JSON.stringify(geoTag));
 }
 
 function discoveryClick(event){
     event.preventDefault();
-    let name = document.getElementById("name-input").value;
+    let name = document.getElementById("searchterm-input").value;
     let params = "name="+name;
     refreshTags(params);
 }
