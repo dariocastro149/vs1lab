@@ -17,9 +17,11 @@ var express = require('express');
 var app;
 app = express();
 app.use(logger('dev'));
-app.use(bodyParser.urlencoded({
+/*app.use(bodyParser.urlencoded({
     extended: false
-}));
+}));*/
+app.use(bodyParser.json());
+app.disable('etag');
 
 // Setze ejs als View Engine
 app.set('view engine', 'ejs');
@@ -36,7 +38,7 @@ app.use(express.static(__dirname + '/public'));
  * GeoTag Objekte sollen min. alle Felder des 'tag-form' Formulars aufnehmen.
  */
 
-function GeoTag(latitude, longitude, name, hashtag){
+function GeoTag(latitude, longitude, name, hashtag) {
     this.latitude = latitude;
     this.longitude = longitude;
     this.name = name;
@@ -56,26 +58,33 @@ var Modul = {
 
     geotags: [],
 
-    searchRadius: function(latitude, longitude, radius){
-        return this.geotags.filter((item) => Math.pow(item.latitude - latitude, 2) + Math.pow(item.latitude - latitude, 2) <= Math.pow(radius, 2));
+    searchRadius: function (latitude, longitude, radius) {
+        return this.geotags.filter((item) => Math.pow(item.latitude - latitude, 2) + Math.pow(item.longitude - longitude, 2) <= Math.pow(radius, 2));
     },
-
-    searchName: function(name) {
-        return this.geotags.filter((item)=>item.name.includes(name) || item.hashtag.includes(name));
+    searchNameandHashtag: function (searchTerm) {
+        return this.geotags.filter((item) => item.name.includes(searchTerm) || item.hashtag.includes(searchTerm));
+    },
+    searchName: function (name) {
+        return this.geotags.filter((item) => item.name === name);
     },
 
     addGeoTag: function (geotag) {
         this.geotags.push(geotag);
     },
-    removeGeoTag: function (geotag) {
-        this.geotags=this.geotags.filter(item.name !== geotag.name);
+    removeGeoTag: function (name) {
+        this.geotags = this.geotags.filter(item => item.name !== name);
+    },
+    updateGeoTag: function(name,lat,lon,hashtag) {
+        var foundIndex = this.geotags.findIndex(item => item.name === name);
+
+        if(lat) this.geotags[foundIndex].latitude = lat;
+        if(lon) this.geotags[foundIndex].longitude = lon;
+        if(hashtag) this.geotags[foundIndex].hashtag = hashtag;
     }
+
 
 };
 
-// Modul.addGeoTag(new GeoTag(49.013987,8.406670,"test","#test"));
-// Modul.addGeoTag(new GeoTag( 49.007733,8.399960,"testen","#testen"));
-//console.log(Modul.geotags);
 
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
@@ -86,9 +95,8 @@ var Modul = {
  * Als Response wird das ejs-Template ohne Geo Tag Objekte gerendert.
  */
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('gta', {
-        taglist: Modul.geotags,
         latinput: null,
         longinput: null
     });
@@ -107,28 +115,34 @@ app.get('/', function(req, res) {
  * Die Objekte liegen in einem Standard Radius um die Koordinate (lat, lon).
  */
 var radius = 10;
-app.post('/tagging', function(req, res) {
+app.post('/tagging', function (req, res) {
 
     var latitude = req.body.latitude;
     var longitude = req.body.longitude;
     var name = req.body.name;
     var hashtag = req.body.hashtag;
 
-    Modul.addGeoTag(new GeoTag(
+    var search = Modul.searchName(name);
+
+    if (!search.length) {
+        Modul.addGeoTag(new GeoTag(
             latitude,
             longitude,
             name,
             hashtag));
-
-    res.render('gta', {
-        taglist: Modul.searchRadius(latitude, longitude, radius),
-        latinput: latitude,
-        longinput: longitude,
-        name: name,
-        hashtag: hashtag
-    });
-
+        search = Modul.searchName(name);
+        res.sendStatus(201);
+        res.send(JSON.stringify({
+            "latitude": latitude,
+            "longitude": longitude,
+            "geotags": search,
+            "newTag": newTag
+        }));
+    } else {
+        res.sendStatus(409);
+    }
 });
+
 
 /**
  * Route mit Pfad '/discovery' für HTTP 'POST' Requests.
@@ -142,22 +156,115 @@ app.post('/tagging', function(req, res) {
  * Falls 'term' vorhanden ist, wird nach Suchwort gefiltert.
  */
 
-app.post('/discovery', function(req, res) {
+app.get('/discovery', function (req, res) {
+    var name = req.query.q;
 
-    if (req.body.name !== undefined) {
-        res.render('gta', {
-            taglist: Modul.searchName(req.body.name),
-            latinput: req.body.latitude,
-            longinput: req.body.longitude
-        });
+    var search = Modul.searchNameandHashtag(name);
+    var exists = false;
+    var lat = undefined;
+    var lon = undefined;
+
+    if (search.length) {
+        lat = search[0].latitude;
+        lon = search[0].longitude;
+        exists = true;
     }
-    else {
-        res.render('gta', {
-            taglist: Modul.geotags,
-            latinput: req.body.latitude,
-            longinput: req.body.longitude
-        });
+    res.send(JSON.stringify({
+        "latitude": lat,
+        "longitude": lon,
+        "geotags": search,
+        "exists": exists
+    }));
+});
+
+
+//API
+
+app.get('/geotags', function (req, res) {
+
+    if (Object.keys(req.query).length !== 0) {
+        var filter = req.query.q;
+        if (filter) {
+            if (/^([0-9]+)$/.test(filter)) {
+                let lon = req.query.lon;
+                let lat = req.query.lat;
+                res.json(Modul.searchRadius(lat, lon, filter));
+            } else if (/^([A-Za-z]{1,10})$/.test(filter)) {
+                res.json(Modul.searchNameandHashtag(filter));
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    } else {
+        res.json(Modul.geotags);
     }
+
+
+});
+app.post('/geotags', function (req, res) {
+    var latitude = req.body.latitude;
+    var longitude = req.body.longitude;
+    var name = req.body.name;
+    var hashtag = req.body.hashtag;
+
+    var search = Modul.searchName(name);
+    if (!search.length) {
+        Modul.addGeoTag(new GeoTag(
+            latitude,
+            longitude,
+            name,
+            hashtag));
+        search = Modul.searchName(name);
+        let uri = "geotags/" + name;
+        res.set({
+            "Location": uri,
+        });
+        res.sendStatus(201);
+    } else {
+        res.sendStatus(409);
+    }
+});
+
+app.put('/geotags/:id', function (req, res) {
+    var latitude = req.body.latitude;
+    var longitude = req.body.longitude;
+    var hashtag = req.body.hashtag;
+
+    let name = req.params.id;
+    let gtag = Modul.searchName(name);
+    if (gtag.length) {
+        console.log("updating");
+        Modul.updateGeoTag(name,latitude,longitude,hashtag);
+        console.log(Modul.searchName(name));
+        res.sendStatus("200");
+    } else {
+        res.sendStatus("404");
+    }
+
+
+});
+
+app.delete('/geotags/:id', function (req, res) {
+    let name = req.params.id;
+    let gtag = Modul.searchName(name);
+    if (gtag.length) {
+        Modul.removeGeoTag(name);
+        res.json(Modul.searchName(name));
+    } else {
+        res.sendStatus("404");
+    }
+
+});
+app.get('/geotags/:id', function (req, res) {
+    let name = req.params.id;
+    let gtag = Modul.searchName(name);
+    if (gtag.length) {
+        res.json(gtag);
+    } else {
+        res.sendStatus("404");
+    }
+
+
 });
 
 /**

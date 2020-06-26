@@ -26,7 +26,7 @@
                 <h2>Tagging</h2>
 
                 <!-- ############### Aufgabe1a Form1 Start -->
-                <form id="tag-form" action="/tagging" method="post">
+                <form id="tag-form">
                     <fieldset>
                         <legend>Enter new GeoTag</legend>
                         <label for="latitude-input">latitude</label>
@@ -53,7 +53,7 @@
                 <h2>Discovery</h2>
 
                 <!-- ############### Aufgabe1a Form2 Start -->
-                <form id="filter-form" action="/discovery" method="post">
+                <form id="filter-form">
                     <fieldset>
                         <legend>Filter by Searchterm</legend>
                         <label for="searchterm-input"></label>
@@ -70,16 +70,12 @@
                 <div class="row">
                     <div class="taglist col-8 no-shrink">
                         <ul id="results">
-                            <% if (taglist !== undefined) taglist.forEach(function(gtag) { %>
-                            <li><%= gtag.name %> ( <%= gtag.latitude %>,<%= gtag.longitude %>) <%= gtag.hashtag %> </li>
-                            <% }); %>
                         </ul>
                     </div>
 
                     <div class="tagmap col-4">
                         <!--add geotags list to 'data-tags'-->
-                        <img id="result-img" data-tags="<%= JSON.stringify(taglist) %>" src="./images/mapview.jpg"
-                             alt="a map with locations"/>
+                        <img id="result-img" src="./images/mapview.jpg" alt="a map with locations"/>
                         <div class="caption">Result map</div>
                     </div>
                 </div>
