@@ -147,6 +147,67 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
     }; // ... Ende öffentlicher Teil
 })(GEOLOCATIONAPI);
 
+
+/**
+ * Konstruktor für GeoTag Objekte.
+ * GeoTag Objekte sollen min. alle Felder des 'tag-form' Formulars aufnehmen.
+ */
+
+function GeoTag(latitude, longitude, name, hashtag){
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.name = name;
+    this.hashtag = hashtag;
+}
+
+function refreshTags(params){
+    let url="/geotags";
+    if(params){
+        url+="?"+params;
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE) {
+            if(this.status === 200) {
+                //TODO: Fill fields!!!
+            } else{
+                alert("Something went wrong with the network request.")
+            }
+        }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+}
+
+
+function taggingClick(event){
+    event.preventDefault();
+    let latitude = document.getElementById("latitude-input").value;
+    let longitude = document.getElementById("longitude-input").value;
+    let name = document.getElementById("name-input").value;
+    let hashtag = document.getElementById("hashtag-input").value;
+    let geoTag = new GeoTag(latitude,longitude,name,hashtag);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && !this.status.toString().startsWith("2")) {
+            alert("Something went wrong with the network request.")
+        }else {
+            refreshTags()
+        }
+    };
+    xhttp.open("POST", "/geotags", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(geoTag);
+}
+
+function discoveryClick(event){
+    event.preventDefault();
+    let name = document.getElementById("name-input").value;
+    let params = "name="+name;
+    refreshTags(params);
+}
+
 /**
  * $(function(){...}) wartet, bis die Seite komplett geladen wurde. Dann wird die
  * angegebene Funktion aufgerufen. An dieser Stelle beginnt die eigentliche Arbeit

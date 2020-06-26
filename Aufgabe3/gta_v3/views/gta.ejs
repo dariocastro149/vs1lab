@@ -40,7 +40,7 @@
                         <label for="hashtag-input">hashtag</label>
                         <input name="hashtag" id="hashtag-input" placeholder="# + max. 10 letters"
                                pattern="#[A-Za-z]{0,10}"/>
-                        <input id="submit-input" type="submit" value="submit"/>
+                        <input id="submit-input" type="submit" value="submit" onClick="taggingClick(event)">
 
                     </fieldset>
                 </form>
@@ -62,7 +62,7 @@
                         <input id="latitude-user" type="hidden"/>
                         <input name="longitude" id="longitude-user" value="<% longinput %>" type="hidden"/>
                         <input id="longitude-user" type="hidden"/>
-                        <input id="apply-input" type="submit" value="apply"/>
+                        <input id="apply-input" type="submit" value="apply" onClick="discoveryClick(event)"/>
                     </fieldset>
                 </form>
                 <!-- ############### Aufgabe1a Form2 Ende -->
