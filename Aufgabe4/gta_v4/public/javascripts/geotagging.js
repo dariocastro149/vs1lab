@@ -215,7 +215,7 @@ function taggingClick(event){
     xhttp.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE && !this.status.toString().startsWith("2")) {
             alert("Something went wrong with the network request.")
-        }else {
+        } else if(this.readyState === XMLHttpRequest.DONE){
             refreshTags()
         }
     };
