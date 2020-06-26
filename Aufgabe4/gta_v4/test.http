@@ -1,0 +1,44 @@
+
+
+###
+# curl -d '{"latitude": 40, "longitude": 1, "name": "test", "hashtag": "#tag"}' -H 'Content-Type: application/json' http://localhost:3000/geotags
+POST http://localhost:3000/geotags
+Content-Type: application/json
+
+{
+  "latitude": 40,
+  "longitude": 1,
+  "name": "test",
+  "hashtag": "#tag"
+}
+
+###
+
+# curl -X GET http://localhost:3000/geotags?radius=20
+GET http://localhost:3000/geotags?radius=20
+
+###
+# curl -X GET http://localhost:3000/geotags?name=20
+GET http://localhost:3000/geotags?name=test
+
+###
+# curl -X GET 'http://localhost:3000/geotags/test'
+GET http://localhost:3000/geotags/test
+
+###
+# curl -d '{"latitude": 22, "longitude": 20, "name":"test","hashtag":"updatedhashtag"}' -H 'Content-Type: application/json' -X PUT 'http://localhost:3000/geotags/test'
+PUT http://localhost:3000/geotags/test
+Content-Type: application/json
+
+{
+  "latitude": 22,
+  "longitude": 20,
+  "name":"test",
+  "hashtag":"#updated"
+}
+
+###
+# curl -X DELETE 'http://localhost:3000/geotags/test'
+DELETE http://localhost:3000/geotags/test
+
+

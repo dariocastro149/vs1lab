@@ -214,9 +214,9 @@ function taggingClick(event){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE && !this.status.toString().startsWith("2")) {
-            alert("Something went wrong with the network request.")
+            alert("Something went wrong with the network request.");
         } else if(this.readyState === XMLHttpRequest.DONE){
-            refreshTags()
+            refreshTags();
         }
     };
     xhttp.open("POST", "/geotags", true);
